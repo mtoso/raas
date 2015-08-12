@@ -1,9 +1,11 @@
 {
   "name": "raas",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Reactjs As A Service",
+  "main": "server.js",
   "scripts": {
+    "start-dev": "NODE_ENV=development node server.js",
+    "start-prod": "NODE_ENV=production node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,5 +16,6 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "react": "^0.13.3"
-  }
+  },
+  "devDependencies": {}
 }
