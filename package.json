@@ -15,6 +15,7 @@
     "babel": "^5.8.21",
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
+    "global-define": "^1.1.4",
     "react": "^0.13.3"
   },
   "devDependencies": {}
