@@ -6,6 +6,8 @@ require("babel/register")({
   ignore: false
 });
 
+require('global-define')({basePath: __dirname});
+
 var React = require('react'),
     express = require('express'),
     path =  require('path'),
