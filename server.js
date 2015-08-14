@@ -6,8 +6,6 @@ require("babel/register")({
   ignore: false
 });
 
-require('global-define')({basePath: __dirname});
-
 var React = require('react'),
     express = require('express'),
     path =  require('path'),
@@ -16,17 +14,27 @@ var React = require('react'),
 
 var app = express();
 
+var deleteModuleCache = app.get('env') === 'production' ? false : true;
+
+require('global-define')({
+  basePath: __dirname,
+  deleteModuleCache: deleteModuleCache
+});
+
 app.set('port', process.env.PORT || 3000);
 app.set('env', process.env.NODE_ENV || 'development');
 app.use(bodyParser.json());
 
-var isCacheActive = app.get('env') === 'production' ? true : false;
 
-app.post('/', function(req, res) {
+
+app.get('/', function(req, res) {
+
   try {
-    var viewPath = path.resolve('./node_modules/' + req.query.module + '/components/' + req.query.component);
-    var component = util.getComponent(viewPath, isCacheActive);
+    var viewPath = path.resolve('./node_modules/' + req.query.module + '/' + req.query.component +'/index.js');
+    var component = util.getComponent(viewPath, deleteModuleCache);
     var props = req.body || null;
+
+    console.log('Request for ' + viewPath + ' with ' + JSON.stringify(props));
 
     res.status(200).send(
       React.renderToString(
@@ -34,6 +42,7 @@ app.post('/', function(req, res) {
       )
     );
   } catch(err) {
+    console.log(err.message);
     res.status(500).send(err.message);
   }
 });
