@@ -3,7 +3,7 @@
 require("babel/register")({
   // This will override `node_modules` ignoring - you can alternatively pass
   // an array of strings to be explicitly matched or a regex / glob
-  ignore: false
+  only: ['index.js'],
 });
 
 var React = require('react'),
@@ -11,6 +11,7 @@ var React = require('react'),
     path =  require('path'),
     bodyParser = require('body-parser'),
     util = require('./util');
+  
 
 var app = express();
 
@@ -18,23 +19,23 @@ var deleteModuleCache = app.get('env') === 'production' ? false : true;
 
 require('global-define')({
   basePath: __dirname,
-  deleteModuleCache: deleteModuleCache
+  deleteModuleCache: deleteModuleCache,
+   paths: {
+    'es6': 'requirejs-es6'
+  }
+
 });
 
 app.set('port', process.env.PORT || 3000);
 app.set('env', process.env.NODE_ENV || 'development');
 app.use(bodyParser.json());
 
-
-
-app.get('/', function(req, res) {
+app.post('/', function(req, res) {
 
   try {
     var viewPath = path.resolve('./node_modules/' + req.query.module + '/' + req.query.component +'/index.js');
     var component = util.getComponent(viewPath, deleteModuleCache);
     var props = req.body || null;
-
-    console.log('Request for ' + viewPath + ' with ' + JSON.stringify(props));
 
     res.status(200).send(
       React.renderToString(
