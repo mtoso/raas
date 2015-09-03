@@ -3,29 +3,38 @@
 require("babel/register")({
   // This will override `node_modules` ignoring - you can alternatively pass
   // an array of strings to be explicitly matched or a regex / glob
-  ignore: false
+  only: ['index.js'],
 });
-
-require('global-define')({basePath: __dirname});
 
 var React = require('react'),
     express = require('express'),
     path =  require('path'),
     bodyParser = require('body-parser'),
     util = require('./util');
+  
 
 var app = express();
+
+var deleteModuleCache = app.get('env') === 'production' ? false : true;
+
+require('global-define')({
+  basePath: __dirname,
+  deleteModuleCache: deleteModuleCache,
+   paths: {
+    'es6': 'requirejs-es6'
+  }
+
+});
 
 app.set('port', process.env.PORT || 3000);
 app.set('env', process.env.NODE_ENV || 'development');
 app.use(bodyParser.json());
 
-var isCacheActive = app.get('env') === 'production' ? true : false;
-
 app.post('/', function(req, res) {
+
   try {
-    var viewPath = path.resolve('./node_modules/' + req.query.module + '/components/' + req.query.component);
-    var component = util.getComponent(viewPath, isCacheActive);
+    var viewPath = path.resolve('./node_modules/' + req.query.module + '/' + req.query.component +'/index.js');
+    var component = util.getComponent(viewPath, deleteModuleCache);
     var props = req.body || null;
 
     res.status(200).send(
@@ -34,6 +43,7 @@ app.post('/', function(req, res) {
       )
     );
   } catch(err) {
+    console.log(err.message);
     res.status(500).send(err.message);
   }
 });
