@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "babel": "^5.8.21",
+    "babel-core": "^5.8.23",
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "global-define": "1.2.0",
