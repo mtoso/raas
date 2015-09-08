@@ -21,9 +21,9 @@ require('global-define')({
   basePath: __dirname,
   deleteModuleCache: deleteModuleCache,
    paths: {
-    'es6': 'requirejs-es6'
+    'es6': 'requirejs-es6',
+    'babel-core' : 'requirejs-es6/node_modules/babel-core'
   }
-
 });
 
 app.set('port', process.env.PORT || 3000);

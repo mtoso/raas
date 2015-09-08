@@ -1,8 +1,7 @@
-exports.getComponent = function(path, isCacheActive) {
-  if (isCacheActive) {
-    return require(path);
-  } else {
+exports.getComponent = function(path, deleteModuleCache) {
+  if (deleteModuleCache) {
     delete require.cache[require.resolve(path)];
-    return require(path);
   }
+
+  return require(path);
 }
